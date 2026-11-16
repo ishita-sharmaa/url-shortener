@@ -1,0 +1,431 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkSnap | URL Shortener</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #182033;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 24px 8%;
+      background: white;
+      border-bottom: 1px solid #e8eaf0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      color: #315bea;
+    }
+
+    header span {
+      color: #7b8498;
+      font-size: 13px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 55px auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 span {
+      color: #315bea;
+    }
+
+    .hero p {
+      color: #737d91;
+      line-height: 1.6;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(20, 35, 80, 0.06);
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin: 18px 0 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #dce1eb;
+      border-radius: 9px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #315bea;
+    }
+
+    button {
+      border: none;
+      border-radius: 9px;
+      padding: 14px 20px;
+      background: #315bea;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2448c5;
+    }
+
+    #shortenBtn {
+      width: 100%;
+      margin-top: 22px;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .result {
+      display: none;
+      margin-top: 20px;
+      background: #eef3ff;
+      padding: 18px;
+      border-radius: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .result a {
+      display: block;
+      color: #315bea;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 22px;
+      border-radius: 13px;
+      box-shadow: 0 5px 20px rgba(20, 35, 80, 0.04);
+    }
+
+    .stat-card p {
+      color: #788196;
+      font-size: 13px;
+    }
+
+    .stat-card h2 {
+      font-size: 28px;
+      margin-top: 9px;
+      color: #315bea;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 10px;
+    }
+
+    .section-heading h2 {
+      font-size: 19px;
+    }
+
+    .refresh {
+      padding: 9px 13px;
+      font-size: 12px;
+    }
+
+    .url-item {
+      padding: 15px 0;
+      border-top: 1px solid #edf0f5;
+      overflow-wrap: anywhere;
+    }
+
+    .url-item a {
+      color: #315bea;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .url-item p {
+      color: #81899a;
+      font-size: 13px;
+      margin-top: 7px;
+    }
+
+    .empty {
+      color: #858da0;
+      font-size: 14px;
+      padding: 15px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #9299a8;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 29px;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      header {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">LinkSnap.</div>
+    <span>Simple URL Shortener</span>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <h1>Shorten your links. <span>Share smarter.</span></h1>
+      <p>Turn long URLs into short, shareable links and track their clicks.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Create a short link</h2>
+
+      <form id="shortenForm">
+        <label for="originalUrl">Paste your long URL</label>
+        <input
+          type="url"
+          id="originalUrl"
+          placeholder="https://example.com/your-long-link"
+          required
+        >
+
+        <label for="customCode">Custom short code (optional)</label>
+        <input
+          type="text"
+          id="customCode"
+          placeholder="e.g. mylink"
+          maxlength="20"
+        >
+
+        <button id="shortenBtn" type="submit">Shorten URL</button>
+      </form>
+
+      <div id="message"></div>
+
+      <div class="result" id="result">
+        <strong>Your short link is ready!</strong>
+        <a id="shortLink" href="#" target="_blank"></a>
+        <button type="button" id="copyBtn">Copy link</button>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stat-card">
+        <p>Total shortened links</p>
+        <h2 id="totalLinks">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <p>Total clicks</p>
+        <h2 id="totalClicks">0</h2>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <h2>Your shortened URLs</h2>
+        <button class="refresh" id="refreshBtn">Refresh</button>
+      </div>
+
+      <div id="urlList">
+        <p class="empty">Loading links...</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    LinkSnap — Built with Node.js and Express.js
+  </footer>
+
+  <script>
+    const form = document.getElementById("shortenForm");
+    const message = document.getElementById("message");
+    const result = document.getElementById("result");
+    const shortLink = document.getElementById("shortLink");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const originalUrl =
+        document.getElementById("originalUrl").value.trim();
+
+      const customCode =
+        document.getElementById("customCode").value.trim();
+
+      const button = document.getElementById("shortenBtn");
+
+      button.disabled = true;
+      button.textContent = "Creating...";
+      message.textContent = "";
+      result.style.display = "none";
+
+      try {
+        const response = await fetch("/api/shorten", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            originalUrl,
+            customCode: customCode || undefined
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+
+        const workingLink = location.origin + "/" + data.details.shortCode;
+
+shortLink.href = workingLink;
+shortLink.textContent = workingLink;
+
+        result.style.display = "block";
+        message.textContent = "URL created successfully!";
+        message.style.color = "green";
+
+        form.reset();
+        loadUrls();
+
+      } catch (error) {
+        message.textContent = error.message;
+        message.style.color = "red";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Shorten URL";
+      }
+    });
+
+    document.getElementById("copyBtn").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(shortLink.href);
+        document.getElementById("copyBtn").textContent = "Copied!";
+      } catch {
+        message.textContent = "Copy failed. Please copy the link manually.";
+        message.style.color = "red";
+      }
+    });
+
+    async function loadUrls() {
+      const list = document.getElementById("urlList");
+
+      try {
+        const response = await fetch("/api/urls");
+
+        if (!response.ok) {
+          throw new Error("Could not load URLs");
+        }
+
+        const urls = await response.json();
+
+        document.getElementById("totalLinks").textContent = urls.length;
+
+        const clicks = urls.reduce(
+          (total, url) => total + url.clicks, 0
+        );
+
+        document.getElementById("totalClicks").textContent = clicks;
+
+        list.replaceChildren();
+
+        if (urls.length === 0) {
+          list.innerHTML = '<p class="empty">No links created yet.</p>';
+          return;
+        }
+
+        urls.forEach((url) => {
+          const item = document.createElement("div");
+          item.className = "url-item";
+
+          const link = document.createElement("a");
+          link.href = "/" + encodeURIComponent(url.shortCode);
+          link.target = "_blank";
+          link.textContent = location.origin + "/" + url.shortCode;
+
+          const original = document.createElement("p");
+          original.textContent = "Original: " + url.originalUrl;
+
+          const clicksText = document.createElement("p");
+          clicksText.textContent = "Clicks: " + url.clicks;
+
+          item.append(link, original, clicksText);
+          list.appendChild(item);
+        });
+
+      } catch (error) {
+        list.textContent = error.message;
+      }
+    }
+
+    document.getElementById("refreshBtn")
+      .addEventListener("click", loadUrls);
+
+    loadUrls();
+  </script>
+
+</body>
+</html>
