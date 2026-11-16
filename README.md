@@ -29,7 +29,7 @@ The application also tracks the number of clicks received by each shortened URL.
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/` | Checks whether the API is running |
+| GET | `/` | Displays the frontend |
 | GET | `/api/health` | Checks server health |
 | POST | `/api/shorten` | Creates a shortened URL |
 | GET | `/api/urls` | Retrieves all shortened URLs |
@@ -38,7 +38,7 @@ The application also tracks the number of clicks received by each shortened URL.
 
 ## Example API Request
 
-**POST /api/shorten**
+**POST `/api/shorten`**
 
 Request body:
 
@@ -99,6 +99,8 @@ The following functionalities have been tested:
 - URL redirection.
 - Click tracking.
 - URL statistics retrieval.
+- Invalid URL validation.
+- Duplicate short code prevention.
 
 ## Future Enhancements
 
